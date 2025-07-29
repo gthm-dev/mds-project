@@ -13,7 +13,6 @@ export default function Home() {
   const [selectedRow, setSelectedRow] = useState(null);
   const gridRef = useRef();
 
-  // Column Definitions: Add the 'filter' property to enable advanced filtering
   const colDefs = [
     { field: 'name', headerName: 'Product Name', flex: 2, editable: true, sortable: true, filter: 'agTextColumnFilter' },
     { field: 'sku', headerName: 'SKU', flex: 1, editable: true, sortable: true, filter: 'agTextColumnFilter' },
@@ -21,7 +20,6 @@ export default function Home() {
     { field: 'price', headerName: 'Price', flex: 1, editable: true, sortable: true, filter: 'agNumberColumnFilter', valueFormatter: p => `$${p.value}` }
   ];
 
-  // ... (the rest of your functions like fetchProducts, handleCellValueChanged, etc. remain the same) ...
   const fetchProducts = () => {
     fetch('http://localhost:3001/api/products')
       .then(res => res.json())
@@ -77,13 +75,14 @@ export default function Home() {
   };
 
   return (
-    <main style={{ padding: '2rem' }}>
+    <main>
       <h1>Product Master (AG Grid)</h1>
       <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem' }}>
         <button onClick={handleAddRow}>+ Add Product</button>
         <button onClick={handleDeleteRow}>- Delete Selected Product</button>
       </div>
-      <div className="ag-theme-quartz" style={{ height: '600px', width: '100%' }}>
+      {/* Use the dark theme className */}
+      <div className="ag-theme-quartz-dark" style={{ height: '600px', width: '100%' }}>
         <AgGridReact
           ref={gridRef}
           rowData={rowData}
