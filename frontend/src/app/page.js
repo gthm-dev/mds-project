@@ -13,14 +13,15 @@ export default function Home() {
   const [selectedRow, setSelectedRow] = useState(null);
   const gridRef = useRef();
 
-  // Column Definitions: Add 'sortable: true' to each column
+  // Column Definitions: Add the 'filter' property to enable advanced filtering
   const colDefs = [
-    { field: 'name', headerName: 'Product Name', flex: 2, editable: true, sortable: true },
-    { field: 'sku', headerName: 'SKU', flex: 1, editable: true, sortable: true },
-    { field: 'description', headerName: 'Description', flex: 3, editable: true, sortable: true },
-    { field: 'price', headerName: 'Price', flex: 1, editable: true, sortable: true, valueFormatter: p => `$${p.value}` }
+    { field: 'name', headerName: 'Product Name', flex: 2, editable: true, sortable: true, filter: 'agTextColumnFilter' },
+    { field: 'sku', headerName: 'SKU', flex: 1, editable: true, sortable: true, filter: 'agTextColumnFilter' },
+    { field: 'description', headerName: 'Description', flex: 3, editable: true, sortable: true, filter: 'agTextColumnFilter' },
+    { field: 'price', headerName: 'Price', flex: 1, editable: true, sortable: true, filter: 'agNumberColumnFilter', valueFormatter: p => `$${p.value}` }
   ];
 
+  // ... (the rest of your functions like fetchProducts, handleCellValueChanged, etc. remain the same) ...
   const fetchProducts = () => {
     fetch('http://localhost:3001/api/products')
       .then(res => res.json())
@@ -90,7 +91,6 @@ export default function Home() {
           onCellValueChanged={handleCellValueChanged}
           rowSelection={'single'}
           onSelectionChanged={onSelectionChanged}
-          // --- Pagination Props ---
           pagination={true}
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 25, 50]}
