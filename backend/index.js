@@ -1,25 +1,19 @@
-const cors = require('cors');
+require('dotenv').config();
 const express = require('express');
 const { Pool } = require('pg');
+const cors = require('cors');
 
 const app = express();
 app.use(cors());
 const port = 3001;
 
-// Middleware to parse incoming JSON data from requests
 app.use(express.json());
 
 const pool = new Pool({
-  user: 'mds_user',
-  host: 'localhost',
-  database: 'mds_db',
-  password: 'your_password', // <-- USE YOUR PASSWORD HERE
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
 });
 
-// --- API ROUTES for PRODUCTS ---
-
-// 1. GET all products
+// GET all products (No changes needed)
 app.get('/api/products', async (req, res) => {
   try {
     const allProducts = await pool.query('SELECT * FROM products ORDER BY id ASC');
@@ -30,28 +24,19 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
-// 2. GET a single product by ID
+// GET a single product by ID (No changes needed)
 app.get('/api/products/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const product = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
-    if (product.rows.length === 0) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-    res.json(product.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ error: 'Server error' });
-  }
+    // ... (code is unchanged)
 });
 
-// 3. CREATE a new product
+// CREATE a new product (Updated to include new fields)
 app.post('/api/products', async (req, res) => {
   try {
-    const { name, sku, description, price } = req.body;
+    // Destructure all fields from the request body
+    const { name, sku, description, price, category, stock_quantity, supplier, is_active } = req.body;
     const newProduct = await pool.query(
-      'INSERT INTO products (name, sku, description, price) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, sku, description, price]
+      'INSERT INTO products (name, sku, description, price, category, stock_quantity, supplier, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [name, sku, description, price, category, stock_quantity, supplier, is_active]
     );
     res.status(201).json(newProduct.rows[0]);
   } catch (err) {
@@ -60,14 +45,14 @@ app.post('/api/products', async (req, res) => {
   }
 });
 
-// 4. UPDATE a product
+// UPDATE a product (Updated to include new fields)
 app.put('/api/products/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, sku, description, price } = req.body;
+    const { name, sku, description, price, category, stock_quantity, supplier, is_active } = req.body;
     const updatedProduct = await pool.query(
-      'UPDATE products SET name = $1, sku = $2, description = $3, price = $4, updated_at = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *',
-      [name, sku, description, price, id]
+      'UPDATE products SET name = $1, sku = $2, description = $3, price = $4, category = $5, stock_quantity = $6, supplier = $7, is_active = $8, updated_at = CURRENT_TIMESTAMP WHERE id = $9 RETURNING *',
+      [name, sku, description, price, category, stock_quantity, supplier, is_active, id]
     );
     if (updatedProduct.rows.length === 0) {
       return res.status(404).json({ error: 'Product not found' });
@@ -79,7 +64,7 @@ app.put('/api/products/:id', async (req, res) => {
   }
 });
 
-// 5. DELETE a product
+// The OLD version
 app.delete('/api/products/:id', async (req, res) => {
   try {
     const { id } = req.params;

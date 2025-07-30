@@ -16,26 +16,45 @@ h1 {
   padding-bottom: 0.5rem;
 }
 
+/* Base style for all buttons - will apply to 'Add Product' */
 button {
-  background-color: #007bff;
+  background-color: #007bff; /* Blue for primary actions */
   color: white;
   border: none;
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Style for the delete button */
-div[style*="gap"] > button:last-child {
-    background-color: #dc3545;
+/* Style for the 'Delete' button (selects the 2nd button in the container) */
+div[style*="gap"] > button:nth-of-type(2) {
+  background-color: #dc3545; /* Red for destructive actions */
 }
 
-div[style*="gap"] > button:last-child:hover {
-    background-color: #c82333;
+div[style*="gap"] > button:nth-of-type(2):hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* Style for the 'Import from Excel' button label */
+.custom-file-upload {
+  display: inline-block;
+  background-color: #28a745; /* Green for success/add actions */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
+  transition: background-color 0.3s ease;
+}
+
+.custom-file-upload:hover {
+  background-color: #218838; /* Darker green on hover */
 }
